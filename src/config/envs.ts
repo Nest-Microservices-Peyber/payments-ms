@@ -14,7 +14,8 @@ interface EnvVars {
     //PRODUCTS_MICROSERVICE_HOST: string
     //PRODUCTS_MICROSERVICE_PORT: number
 
-    //NATS_SERVERS: string[]; 
+    NATS_SERVERS: string[]; 
+    
 }
 
 const envSchema = joi.object({
@@ -28,14 +29,15 @@ const envSchema = joi.object({
     //DATABASE_URL: joi.string().required(),
     //PRODUCTS_MICROSERVICE_HOST: joi.string().required(),
     //PRODUCTS_MICROSERVICE_PORT: joi.number().required(),
-
-    //NATS_SERVERS: joi.array().items(joi.string()).required()
+    
+    NATS_SERVERS: joi.array().items( joi.string() ).required(),
+    
 })
 .unknown(true);
 
 const {error, value } = envSchema.validate({
     ...process.env,
-    //NATS_SERVERS: process.env.NATS_SERVERS?.split(',')
+    NATS_SERVERS: process.env.NATS_SERVERS?.split(',')
 })
 
 if(error) {
@@ -43,18 +45,20 @@ if(error) {
 }
 
 const envVars: EnvVars = value;
+
+
 export const envs = {
     port: envVars.PORT,
     stripeSecret: envVars.STRIPE_SECRET,
 
     stripeSuccessUrl: envVars.STRIPE_SUCCESS_URL,
     stripeCancelUrl: envVars.STRIPE_CANCEL_URL,
-    stripeEndpointSecret: envVars.ENDPOINT_SECRET
+    stripeEndpointSecret: envVars.ENDPOINT_SECRET,
     
     //databaseUrl: envVars.DATABASE_URL,
     //productsMicroservicesHost: envVars.PRODUCTS_MICROSERVICE_HOST,
     //productsMicroservicesPort: envVars.PRODUCTS_MICROSERVICE_PORT,
 
-    //natsServers: envVars.NATS_SERVERS
+    natsServers: envVars.NATS_SERVERS
     
 }
